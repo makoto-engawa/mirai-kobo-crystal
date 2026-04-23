@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>月の刻 — Tsuki no Koku craft studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Kiwi+Maru:wght@300;400;500&family=Noto+Serif+JP:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #c9a04a;
+  --gold-soft: #d4b06a;
+  --gold-pale: #e8d4a0;
+  --gold-bright: #dfc070;
+  --navy: #1e2a38;
+  --navy-soft: #2a3a4e;
+  --cream: #fdf8f0;
+  --cream-deep: #f5ede0;
+  --warm-white: #fffdf8;
+  --text-dark: #4a3c2e;
+  --text-mid: #7a6a58;
+  --text-soft: #9a8a78;
+  --text-light: #b8a898;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Kiwi Maru', 'Noto Serif JP', serif;
+  background: var(--cream);
+  color: var(--text-dark);
+  overflow-x: hidden;
+}
+
+/* ============ MOON CURSOR GLOW ============ */
+.moon-glow-cursor {
+  position: fixed;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(201,160,74,0.06) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.3s;
+}
+
+/* ============ FLOATING PARTICLES ============ */
+.particles {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.particle {
+  position: absolute;
+  width: 3px; height: 3px;
+  background: var(--gold-pale);
+  border-radius: 50%;
+  opacity: 0;
+  animation: float-particle 12s infinite;
+}
+
+@keyframes float-particle {
+  0% { opacity: 0; transform: translateY(100vh) scale(0); }
+  10% { opacity: 0.6; }
+  90% { opacity: 0.2; }
+  100% { opacity: 0; transform: translateY(-10vh) scale(1); }
+}
+
+/* ============ HERO ============ */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, var(--cream) 0%, var(--cream-deep) 50%, var(--cream) 100%);
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 800px;
+  height: 800px;
+  background: radial-gradient(circle, rgba(201,160,74,0.08) 0%, transparent 60%);
+  border-radius: 50%;
+  animation: hero-glow 8s ease-in-out infinite alternate;
+}
+
+@keyframes hero-glow {
+  0% { opacity: 0.5; transform: translateX(-50%) scale(0.9); }
+  100% { opacity: 1; transform: translateX(-50%) scale(1.1); }
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 40px 20px;
+  animation: fade-in-up 1.5s ease-out;
+}
+
+@keyframes fade-in-up {
+  0% { opacity: 0; transform: translateY(30px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Logo image */
+.logo-image {
+  width: 280px;
+  height: auto;
+  margin-bottom: 30px;
+  filter: drop-shadow(0 4px 20px rgba(201,160,74,0.15));
+  animation: logo-breathe 6s ease-in-out infinite alternate;
+}
+
+@keyframes logo-breathe {
+  0% { filter: drop-shadow(0 4px 20px rgba(201,160,74,0.1)); }
+  100% { filter: drop-shadow(0 8px 40px rgba(201,160,74,0.25)); }
+}
+
+.hero-tagline {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.1rem;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--gold);
+  letter-spacing: 0.3em;
+  margin-bottom: 16px;
+  opacity: 0;
+  animation: fade-in-up 1.5s ease-out 0.5s forwards;
+}
+
+.hero-subtitle {
+  font-size: 0.85rem;
+  color: var(--text-soft);
+  letter-spacing: 0.15em;
+  font-weight: 300;
+  opacity: 0;
+  animation: fade-in-up 1.5s ease-out 0.8s forwards;
+}
+
+.hero-divider {
+  width: 60px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-pale), transparent);
+  margin: 28px auto;
+  opacity: 0;
+  animation: fade-in-up 1.5s ease-out 1s forwards;
+}
+
+.hero-description {
+  max-width: 480px;
+  font-size: 0.9rem;
+  color: var(--text-mid);
+  line-height: 2;
+  letter-spacing: 0.05em;
+  opacity: 0;
+  animation: fade-in-up 1.5s ease-out 1.2s forwards;
+}
+
+/* ============ SCROLL INDICATOR ============ */
+.scroll-indicator {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  opacity: 0;
+  animation: fade-in-up 1.5s ease-out 2s forwards;
+}
+
+.scroll-indicator span {
+  font-size: 0.65rem;
+  color: var(--text-light);
+  letter-spacing: 0.2em;
+}
+
+.scroll-line {
+  width: 1px;
+  height: 30px;
+  background: linear-gradient(to bottom, var(--gold-pale), transparent);
+  animation: scroll-pulse 2s ease-in-out infinite;
+}
+
+@keyframes scroll-pulse {
+  0%, 100% { opacity: 0.3; transform: scaleY(0.7); }
+  50% { opacity: 1; transform: scaleY(1); }
+}
+
+/* ============ SECTIONS ============ */
+.section {
+  padding: 100px 20px;
+  position: relative;
+  z-index: 2;
+}
+
+.section-title {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.section-title h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.8rem;
+  font-weight: 400;
+  color: var(--text-dark);
+  letter-spacing: 0.15em;
+  margin-bottom: 8px;
+}
+
+.section-title .en {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.75rem;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--gold);
+  letter-spacing: 0.3em;
+}
+
+/* ============ CONCEPT ============ */
+.concept {
+  background: linear-gradient(180deg, var(--cream) 0%, var(--warm-white) 50%, var(--cream) 100%);
+}
+
+.concept-grid {
+  max-width: 900px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+}
+
+.concept-item {
+  text-align: center;
+  padding: 30px 20px;
+}
+
+.concept-icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 20px;
+  border: 1px solid var(--gold-pale);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold);
+  font-size: 1.2rem;
+}
+
+.concept-item h3 {
+  font-size: 0.95rem;
+  color: var(--text-dark);
+  margin-bottom: 12px;
+  letter-spacing: 0.1em;
+}
+
+.concept-item p {
+  font-size: 0.8rem;
+  color: var(--text-soft);
+  line-height: 1.8;
+}
+
+/* ============ PRODUCTS ============ */
+.products {
+  background: var(--navy);
+  padding: 100px 20px;
+}
+
+.products .section-title h2 {
+  color: var(--cream);
+}
+
+.product-grid {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+}
+
+.product-card {
+  background: rgba(255,255,255,0.04);
+  border-radius: 16px;
+  overflow: hidden;
+  border: 0.5px solid rgba(201,160,74,0.2);
+  transition: all 0.5s ease;
+  cursor: pointer;
+}
+
+.product-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 24px 60px rgba(201,160,74,0.1);
+  border-color: rgba(201,160,74,0.4);
+}
+
+.product-image {
+  height: 220px;
+  background: linear-gradient(135deg, var(--navy-soft), var(--navy));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.product-image::after {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100px; height: 100px;
+  background: radial-gradient(circle, rgba(201,160,74,0.08) 0%, transparent 70%);
+  border-radius: 50%;
+}
+
+.crystal-placeholder {
+  width: 80px; height: 100px;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 4px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+  position: relative;
+}
+
+.crystal-placeholder.round { border-radius: 50%; width: 90px; height: 90px; }
+.crystal-placeholder.heart {
+  clip-path: path('M40 80 C40 80 2 55 2 28 C2 12 14 2 28 2 C35 2 39 8 40 14 C41 8 45 2 52 2 C66 2 78 12 78 28 C78 55 40 80 40 80Z');
+  width: 80px; height: 82px;
+  border: none;
+  background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.03));
+}
+
+.product-info {
+  padding: 22px;
+}
+
+.product-info h3 {
+  font-size: 0.95rem;
+  color: var(--cream);
+  margin-bottom: 6px;
+  letter-spacing: 0.08em;
+}
+
+.product-info .en-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.75rem;
+  color: var(--gold-soft);
+  font-style: italic;
+  margin-bottom: 10px;
+}
+
+.product-info p {
+  font-size: 0.75rem;
+  color: rgba(253,248,240,0.5);
+  line-height: 1.7;
+}
+
+.product-price {
+  margin-top: 14px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.1rem;
+  color: var(--gold);
+}
+
+/* ============ CONTACT / FOOTER ============ */
+.footer {
+  padding: 60px 20px;
+  text-align: center;
+  background: var(--cream-deep);
+  border-top: 1px solid var(--gold-pale);
+}
+
+.footer-logo {
+  width: 120px;
+  margin-bottom: 20px;
+  opacity: 0.7;
+}
+
+.footer p {
+  font-size: 0.75rem;
+  color: var(--text-light);
+  letter-spacing: 0.1em;
+  line-height: 2;
+}
+
+.footer .copyright {
+  margin-top: 30px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.7rem;
+  color: var(--text-light);
+  letter-spacing: 0.15em;
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 768px) {
+  .concept-grid { grid-template-columns: 1fr; gap: 20px; }
+  .logo-image { width: 200px; }
+  .hero-tagline { font-size: 0.9rem; letter-spacing: 0.2em; }
+  .section { padding: 60px 16px; }
+}
+</style>
+</head>
+<body>
+
+<div class="moon-glow-cursor" id="cursor"></div>
+
+<div class="particles" id="particles"></div>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="hero-content">
+    <img src="assets/logo.png" alt="月の刻 tsuki no koku" class="logo-image">
+    <p class="hero-tagline">carved by moonlight</p>
+    <div class="hero-divider"></div>
+    <p class="hero-subtitle">UV LASER ENGRAVING CRAFT STUDIO</p>
+    <div class="hero-divider"></div>
+    <p class="hero-description">
+      月明かりに照らされた静寂の中で、<br>
+      一つひとつ、永遠の想いを刻みます。<br>
+      日本の美意識と、レーザーの精密さが出会う場所。
+    </p>
+  </div>
+  <div class="scroll-indicator">
+    <span>SCROLL</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ============ CONCEPT ============ -->
+<section class="section concept">
+  <div class="section-title">
+    <h2>三つの約束</h2>
+    <span class="en">Our Promise</span>
+  </div>
+  <div class="concept-grid">
+    <div class="concept-item">
+      <div class="concept-icon">∞</div>
+      <h3>永遠性</h3>
+      <p>クリスタルに刻まれた想いは、<br>色褪せることなく永遠に輝き続けます。</p>
+    </div>
+    <div class="concept-item">
+      <div class="concept-icon">◇</div>
+      <h3>一点一彫</h3>
+      <p>すべての作品は一点もの。<br>あなただけの月明かりを刻みます。</p>
+    </div>
+    <div class="concept-item">
+      <div class="concept-icon">月</div>
+      <h3>日本の美意識</h3>
+      <p>侍、桜、鳥居——<br>日本の美を世界へ届けます。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PRODUCTS ============ -->
+<section class="products">
+  <div class="section-title">
+    <h2>作品</h2>
+    <span class="en">Collection</span>
+  </div>
+  <div class="product-grid">
+    <div class="product-card">
+      <div class="product-image">
+        <div class="crystal-placeholder"></div>
+      </div>
+      <div class="product-info">
+        <h3>侍シルエット</h3>
+        <p class="en-name">Samurai Silhouette Crystal</p>
+        <p>月光に浮かぶ侍の凛とした佇まい。3Dクリスタル内部彫刻。</p>
+        <div class="product-price">¥4,980 〜</div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-image">
+        <div class="crystal-placeholder round"></div>
+      </div>
+      <div class="product-info">
+        <h3>桜と鳥居</h3>
+        <p class="en-name">Sakura Torii Gate</p>
+        <p>満開の桜と朱の鳥居。日本の春を永遠に閉じ込めて。</p>
+        <div class="product-price">¥5,480 〜</div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-image">
+        <div class="crystal-placeholder heart"></div>
+      </div>
+      <div class="product-info">
+        <h3>ペットメモリアル</h3>
+        <p class="en-name">Pet Memorial Crystal</p>
+        <p>大切な家族の面影を、いつまでも手のひらに。</p>
+        <div class="product-price">¥6,980 〜</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer">
+  <img src="assets/logo.png" alt="月の刻" class="footer-logo">
+  <p>
+    月の刻（Tsuki no Koku）craft studio<br>
+    月明かりに、永遠を刻む。
+  </p>
+  <p class="copyright">© 2026 Tsuki no Koku craft studio. All rights reserved.</p>
+</footer>
+
+<script>
+// Moon glow cursor
+const cursor = document.getElementById('cursor');
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top = e.clientY + 'px';
+});
+
+// Floating particles
+const container = document.getElementById('particles');
+for (let i = 0; i < 20; i++) {
+  const p = document.createElement('div');
+  p.className = 'particle';
+  p.style.left = Math.random() * 100 + '%';
+  p.style.animationDelay = Math.random() * 12 + 's';
+  p.style.animationDuration = (8 + Math.random() * 8) + 's';
+  p.style.width = p.style.height = (2 + Math.random() * 3) + 'px';
+  container.appendChild(p);
+}
+</script>
+</body>
+</html>
